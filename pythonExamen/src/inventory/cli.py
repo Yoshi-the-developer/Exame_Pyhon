@@ -45,7 +45,7 @@ def print_menu() -> None:
     print("3) Ajouter un produit")
     print("4) Modifier un produit")
     print("5) Supprimer un produit")
-    print("6) Vendre un produit    (TODO)")
+    print("6) Vendre un produit")
     print("7) Tableau de bord      (TODO)")
     print("8) Quitter")
 
@@ -228,6 +228,36 @@ def action_delete_product(app: InventoryManager) -> None:
         print(f"Erreur lors de la suppression : {e}")
 
 
+def action_sell_product(app: InventoryManager) -> None:
+    print("\n[Vente de produit]")
+    id_str = _prompt("ID du produit vendu : ")
+    if not id_str.isdigit():
+        print("Erreur : L'ID doit être un nombre entier.")
+        return
+    product_id = int(id_str)
+
+    qty_str = _prompt("Quantité vendue : ")
+    if not qty_str.isdigit():
+        print("Erreur : La quantité doit être un nombre entier.")
+        return
+    quantity = int(qty_str)
+
+    if quantity <= 0:
+        print("Erreur : La quantité doit être positive.")
+        return
+
+    try:
+        sale = app.sell_product(product_id, quantity)
+        print("Vente enregistrée avec succès !")
+        print(f"Produit : {sale.sku}")
+        print(f"Prix unitaire HT : {sale.unit_price_ht:.2f}")
+        print(f"Total HT  : {sale.total_ht:.2f}")
+        print(f"Total TVA : {sale.total_vat:.2f} ({sale.vat_rate*100:.0f}%)")
+        print(f"Total TTC : {sale.total_ttc:.2f}")
+    except Exception as e:
+        print(f"Erreur lors de la vente : {e}")
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description="Inventory CLI — starter kit")
     p.add_argument("--db", default="data/inventory.db", help="Chemin du fichier SQLite (.db)")
@@ -260,7 +290,9 @@ def main() -> int:
                 action_update_product(app)
             elif choice == "5":
                 action_delete_product(app)
-            elif choice in {"6", "7"}:
+            elif choice == "6":
+                action_sell_product(app)
+            elif choice == "7":
                 print("Fonctionnalité TODO : à implémenter par l'étudiant selon l'énoncé.")
             elif choice == "8":
                 print("Au revoir.")

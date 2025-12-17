@@ -20,7 +20,7 @@ import logging
 from typing import List, Optional
 
 from .config import AppConfig
-from .models import Product, now_iso
+from .models import Product, Sale, now_iso
 from .repository import SQLiteRepository
 from .utils import load_initial_json
 
@@ -71,7 +71,7 @@ class InventoryManager:
                     quantity: int, vat_rate: float = 0.20) -> int:
         """Ajoute un nouveau produit."""
         product = Product(
-            sku=sku,
+            sku="SKU-" + sku,
             name=name,
             category=category,
             unit_price_ht=unit_price_ht,
@@ -118,7 +118,32 @@ class InventoryManager:
             raise InventoryError(f"Produit ID={product_id} introuvable.")
         self.repo.delete_product(product_id)
 
+    def sell_product(self, product_id: int, quantity: int) -> Sale:
+        """Vend un produit : calcule les totaux et appelle le repo."""
+        product = self.get_product(product_id)
+        if not product:
+            raise InventoryError(f"Produit ID={product_id} introuvable.")
+
+        # Calculs financiers
+        total_ht = product.unit_price_ht * quantity
+        total_vat = total_ht * product.vat_rate
+        total_ttc = total_ht + total_vat
+
+        sale = Sale(
+            product_id=product.id,  # type: ignore (id cannot be None here)
+            sku=product.sku,
+            quantity=quantity,
+            unit_price_ht=product.unit_price_ht,
+            vat_rate=product.vat_rate,
+            total_ht=round(total_ht, 2),
+            total_vat=round(total_vat, 2),
+            total_ttc=round(total_ttc, 2),
+            sold_at=now_iso(),
+        )
+
+        self.repo.record_sale(sale)
+        return sale
+
     # TODO (étudiant) :
-    # - sell_product (transaction atomique + calculs)
     # - dashboard (totaux)
     # - export_sales_csv

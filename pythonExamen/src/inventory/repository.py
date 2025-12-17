@@ -25,8 +25,8 @@ import sqlite3
 from contextlib import contextmanager
 from typing import Iterable, List
 
-from .exceptions import DatabaseError
-from .models import Product, now_iso
+from .exceptions import DatabaseError, InventoryError
+from .models import Product, Sale, now_iso
 
 logger = logging.getLogger(__name__)
 
@@ -194,4 +194,49 @@ class SQLiteRepository:
                 conn.rollback()
                 raise DatabaseError(f"Erreur delete produit: {e}") from e
 
-    # TODO (étudiant) : vente atomique, dashboard, export ventes
+    def record_sale(self, sale: Sale) -> int:
+        """Enregistre une vente de manière atomique (Update stock + Insert sale)."""
+        with self.connect() as conn:
+            try:
+                # 1. Vérifier le stock actuel
+                cur = conn.execute("SELECT quantity FROM products WHERE id = ?", (sale.product_id,))
+                row = cur.fetchone()
+                if not row:
+                    raise InventoryError(f"Produit ID={sale.product_id} introuvable.")
+                
+                current_qty = int(row["quantity"])
+                if current_qty < sale.quantity:
+                    raise InventoryError(f"Stock insuffisant ({current_qty} < {sale.quantity}).")
+
+                # 2. Décrémenter le stock
+                conn.execute(
+                    "UPDATE products SET quantity = quantity - ? WHERE id = ?",
+                    (sale.quantity, sale.product_id)
+                )
+
+                # 3. Insérer la vente
+                cur_sale = conn.execute(
+                    """
+                    INSERT INTO sales(product_id, sku, quantity, unit_price_ht, vat_rate, total_ht, total_vat, total_ttc, sold_at)
+                    VALUES(?,?,?,?,?,?,?,?,?)
+                    """,
+                    (
+                        sale.product_id,
+                        sale.sku,
+                        sale.quantity,
+                        sale.unit_price_ht,
+                        sale.vat_rate,
+                        sale.total_ht,
+                        sale.total_vat,
+                        sale.total_ttc,
+                        sale.sold_at
+                    )
+                )
+                conn.commit()
+                return int(cur_sale.lastrowid)
+
+            except sqlite3.Error as e:
+                conn.rollback()
+                raise DatabaseError(f"Erreur transaction vente: {e}") from e
+    
+    # TODO (étudiant) : dashboard, export ventes

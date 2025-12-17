@@ -145,4 +145,40 @@ class SQLiteRepository:
                 ))
             return out
 
-    # TODO (étudiant) : CRUD complet, vente atomique, dashboard, export ventes
+    def get_product_by_id(self, product_id: int) -> Product | None:
+        with self.connect() as conn:
+            cur = conn.execute("SELECT * FROM products WHERE id = ?", (product_id,))
+            row = cur.fetchone()
+            if not row:
+                return None
+            return Product(
+                id=int(row["id"]),
+                sku=str(row["sku"]),
+                name=str(row["name"]),
+                category=str(row["category"]),
+                unit_price_ht=float(row["unit_price_ht"]),
+                vat_rate=float(row["vat_rate"]),
+                quantity=int(row["quantity"]),
+                created_at=str(row["created_at"]),
+            )
+
+    def update_product(self, p: Product) -> None:
+        if not p.id:
+             raise DatabaseError("Impossible de mettre à jour un produit sans ID.")
+        
+        with self.connect() as conn:
+            try:
+                conn.execute(
+                    """
+                    UPDATE products
+                    SET sku=?, name=?, category=?, unit_price_ht=?, vat_rate=?, quantity=?
+                    WHERE id=?
+                    """,
+                    (p.sku, p.name, p.category, p.unit_price_ht, p.vat_rate, p.quantity, p.id),
+                )
+                conn.commit()
+            except sqlite3.Error as e:
+                conn.rollback()
+                raise DatabaseError(f"Erreur update produit: {e}") from e
+
+    # TODO (étudiant) : DELETE, vente atomique, dashboard, export ventes

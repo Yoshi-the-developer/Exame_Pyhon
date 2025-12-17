@@ -43,7 +43,7 @@ def print_menu() -> None:
     print("1) Initialiser le stock (depuis un JSON)")
     print("2) Afficher l’inventaire")
     print("3) Ajouter un produit")
-    print("4) Modifier un produit  (TODO)")
+    print("4) Modifier un produit")
     print("5) Supprimer un produit (TODO)")
     print("6) Vendre un produit    (TODO)")
     print("7) Tableau de bord      (TODO)")
@@ -129,6 +129,77 @@ def action_add_product(app: InventoryManager) -> None:
 
 
 
+def action_update_product(app: InventoryManager) -> None:
+    print("\n[Modification de produit]")
+    id_str = _prompt("ID du produit à modifier : ")
+    if not id_str.isdigit():
+        print("Erreur : L'ID doit être un nombre entier.")
+        return
+    
+    product_id = int(id_str)
+    product = app.get_product(product_id)
+    if not product:
+        print(f"Erreur : Aucun produit trouvé avec l'ID {product_id}.")
+        return
+
+    print(f"Modification de : {product.name} (SKU: {product.sku})")
+    print("Laissez vide pour conserver la valeur actuelle.")
+
+    name = _prompt(f"Nouveau nom [{product.name}] : ")
+    category = _prompt(f"Nouvelle catégorie [{product.category}] : ")
+    
+    price_ht = None
+    price_str = _prompt(f"Nouveau prix HT [{product.unit_price_ht}] : ")
+    if price_str:
+        try:
+            val = float(price_str)
+            if val < 0:
+                print("Erreur : prix négatif.")
+                return
+            price_ht = val
+        except ValueError:
+            print("Erreur : format de prix invalide.")
+            return
+
+    quantity = None
+    qty_str = _prompt(f"Nouvelle quantité [{product.quantity}] : ")
+    if qty_str:
+        try:
+            val = int(qty_str)
+            if val < 0:
+                print("Erreur : quantité négative.")
+                return
+            quantity = val
+        except ValueError:
+            print("Erreur : format de quantité invalide.")
+            return
+
+    vat_rate = None
+    vat_str = _prompt(f"Nouveau taux TVA [{product.vat_rate}] : ")
+    if vat_str:
+        try:
+            val = float(vat_str)
+            if not (0 <= val <= 1):
+                print("Erreur : TVA hors limites (0-1).")
+                return
+            vat_rate = val
+        except ValueError:
+            print("Erreur : format de TVA invalide.")
+            return
+
+    try:
+        app.update_product(
+            product_id=product_id,
+            name=name if name else None,
+            category=category if category else None,
+            unit_price_ht=price_ht,
+            quantity=quantity,
+            vat_rate=vat_rate,
+        )
+        print("Succès ! Produit mis à jour.")
+    except Exception as e:
+        print(f"Erreur lors de la mise à jour : {e}")
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description="Inventory CLI — starter kit")
     p.add_argument("--db", default="data/inventory.db", help="Chemin du fichier SQLite (.db)")
@@ -157,7 +228,9 @@ def main() -> int:
                 action_list_inventory(app)
             elif choice == "3":
                 action_add_product(app)
-            elif choice in {"4", "5", "6", "7"}:
+            elif choice == "4":
+                action_update_product(app)
+            elif choice in {"5", "6", "7"}:
                 print("Fonctionnalité TODO : à implémenter par l'étudiant selon l'énoncé.")
             elif choice == "8":
                 print("Au revoir.")

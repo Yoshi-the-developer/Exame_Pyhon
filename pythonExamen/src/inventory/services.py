@@ -81,8 +81,38 @@ class InventoryManager:
         )
         return self.repo.insert_product(product)
 
+    def get_product(self, product_id: int) -> Optional[Product]:
+        """Récupère un produit par son ID."""
+        self.repo.create_schema_if_needed()
+        return self.repo.get_product_by_id(product_id)
+
+    def update_product(self, product_id: int,
+                       name: Optional[str] = None,
+                       category: Optional[str] = None,
+                       unit_price_ht: Optional[float] = None,
+                       quantity: Optional[int] = None,
+                       vat_rate: Optional[float] = None) -> None:
+        """Met à jour un produit existant (champs optionnels)."""
+        existing = self.repo.get_product_by_id(product_id)
+        if not existing:
+            raise InventoryError(f"Produit ID={product_id} introuvable.")
+
+        # On crée une nouvelle instance avec les champs modifiés
+        # (Product est immuable/frozen, donc on remplace)
+        updated = Product(
+            id=existing.id,
+            sku=existing.sku,  # Le SKU ne change généralement pas
+            name=name if name is not None else existing.name,
+            category=category if category is not None else existing.category,
+            unit_price_ht=unit_price_ht if unit_price_ht is not None else existing.unit_price_ht,
+            quantity=quantity if quantity is not None else existing.quantity,
+            vat_rate=vat_rate if vat_rate is not None else existing.vat_rate,
+            created_at=existing.created_at,
+        )
+        self.repo.update_product(updated)
+
     # TODO (étudiant) :
-    # - update_product / delete_product
+    # - delete_product
     # - sell_product (transaction atomique + calculs)
     # - dashboard (totaux)
     # - export_sales_csv

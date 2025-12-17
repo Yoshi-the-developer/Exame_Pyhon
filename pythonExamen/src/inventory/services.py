@@ -111,8 +111,14 @@ class InventoryManager:
         )
         self.repo.update_product(updated)
 
+    def delete_product(self, product_id: int) -> None:
+        """Supprime un produit existant."""
+        existing = self.repo.get_product_by_id(product_id)
+        if not existing:
+            raise InventoryError(f"Produit ID={product_id} introuvable.")
+        self.repo.delete_product(product_id)
+
     # TODO (étudiant) :
-    # - delete_product
     # - sell_product (transaction atomique + calculs)
     # - dashboard (totaux)
     # - export_sales_csv

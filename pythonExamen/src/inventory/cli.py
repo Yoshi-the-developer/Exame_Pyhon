@@ -44,7 +44,7 @@ def print_menu() -> None:
     print("2) Afficher l’inventaire")
     print("3) Ajouter un produit")
     print("4) Modifier un produit")
-    print("5) Supprimer un produit (TODO)")
+    print("5) Supprimer un produit")
     print("6) Vendre un produit    (TODO)")
     print("7) Tableau de bord      (TODO)")
     print("8) Quitter")
@@ -200,6 +200,34 @@ def action_update_product(app: InventoryManager) -> None:
     except Exception as e:
         print(f"Erreur lors de la mise à jour : {e}")
 
+def action_delete_product(app: InventoryManager) -> None:
+    print("\n[Suppression de produit]")
+    id_str = _prompt("ID du produit à supprimer : ")
+    if not id_str.isdigit():
+        print("Erreur : L'ID doit être un nombre entier.")
+        return
+    
+    product_id = int(id_str)
+    
+    # On peut verifier si le produit existe avant de confirmer (optionnel mais sympa)
+    existing = app.get_product(product_id)
+    if not existing:
+        print(f"Erreur : Produit {product_id} introuvable.")
+        return
+
+    print(f"Vous allez supprimer : {existing.name} (SKU: {existing.sku})")
+    confirm = _prompt("Êtes-vous sûr ? (o/n) : ")
+    if confirm.lower() != 'o':
+        print("Annulé.")
+        return
+
+    try:
+        app.delete_product(product_id)
+        print(f"Succès ! Produit ID={product_id} supprimé.")
+    except Exception as e:
+        print(f"Erreur lors de la suppression : {e}")
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description="Inventory CLI — starter kit")
     p.add_argument("--db", default="data/inventory.db", help="Chemin du fichier SQLite (.db)")
@@ -230,7 +258,9 @@ def main() -> int:
                 action_add_product(app)
             elif choice == "4":
                 action_update_product(app)
-            elif choice in {"5", "6", "7"}:
+            elif choice == "5":
+                action_delete_product(app)
+            elif choice in {"6", "7"}:
                 print("Fonctionnalité TODO : à implémenter par l'étudiant selon l'énoncé.")
             elif choice == "8":
                 print("Au revoir.")

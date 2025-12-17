@@ -181,4 +181,17 @@ class SQLiteRepository:
                 conn.rollback()
                 raise DatabaseError(f"Erreur update produit: {e}") from e
 
-    # TODO (étudiant) : DELETE, vente atomique, dashboard, export ventes
+    def delete_product(self, product_id: int) -> None:
+        with self.connect() as conn:
+            try:
+                conn.execute("DELETE FROM products WHERE id = ?", (product_id,))
+                conn.commit()
+            except sqlite3.IntegrityError as e:
+                # Violations de FK si le produit est référencé dans 'sales'
+                conn.rollback()
+                raise DatabaseError(f"Impossible de supprimer ce produit (déjà vendu ?) : {e}") from e
+            except sqlite3.Error as e:
+                conn.rollback()
+                raise DatabaseError(f"Erreur delete produit: {e}") from e
+
+    # TODO (étudiant) : vente atomique, dashboard, export ventes

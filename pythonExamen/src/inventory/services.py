@@ -144,6 +144,13 @@ class InventoryManager:
         self.repo.record_sale(sale)
         return sale
 
+    def get_dashboard_data(self) -> dict:
+        """Récupère les données consolidées pour le tableau de bord."""
+        self.repo.create_schema_if_needed()
+        return {
+            "inventory": self.repo.get_inventory_stats(),
+            "sales": self.repo.get_sales_stats(),
+        }
+
     # TODO (étudiant) :
-    # - dashboard (totaux)
     # - export_sales_csv

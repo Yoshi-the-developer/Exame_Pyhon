@@ -239,4 +239,38 @@ class SQLiteRepository:
                 conn.rollback()
                 raise DatabaseError(f"Erreur transaction vente: {e}") from e
     
-    # TODO (étudiant) : dashboard, export ventes
+    def get_inventory_stats(self) -> dict:
+        """Retourne les stats globales de l'inventaire."""
+        with self.connect() as conn:
+            # COUNT(*) : nombre de références produits
+            # SUM(quantity) : nombre total d'articles stockés
+            # SUM(unit_price_ht * quantity) : valeur totale du stock (HT)
+            sql = """
+            SELECT 
+                COUNT(*) as total_refs,
+                COALESCE(SUM(quantity), 0) as total_items,
+                COALESCE(SUM(unit_price_ht * quantity), 0) as total_value_ht
+            FROM products
+            """
+            row = conn.execute(sql).fetchone()
+            return dict(row)
+
+    def get_sales_stats(self) -> dict:
+        """Retourne les stats globales des ventes."""
+        with self.connect() as conn:
+            # COUNT(*) : nombre de lignes de ventes
+            # SUM(quantity) : nombre d'articles vendus
+            # SUM(total_ht) : CA total HT
+            # SUM(total_ttc) : CA total TTC
+            sql = """
+            SELECT 
+                COUNT(*) as total_sales_lines,
+                COALESCE(SUM(quantity), 0) as items_sold,
+                COALESCE(SUM(total_ht), 0) as revenue_ht,
+                COALESCE(SUM(total_ttc), 0) as revenue_ttc
+            FROM sales
+            """
+            row = conn.execute(sql).fetchone()
+            return dict(row)
+
+    # TODO (étudiant) : export ventes

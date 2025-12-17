@@ -46,7 +46,7 @@ def print_menu() -> None:
     print("4) Modifier un produit")
     print("5) Supprimer un produit")
     print("6) Vendre un produit")
-    print("7) Tableau de bord      (TODO)")
+    print("7) Tableau de bord")
     print("8) Quitter")
 
 
@@ -258,6 +258,25 @@ def action_sell_product(app: InventoryManager) -> None:
         print(f"Erreur lors de la vente : {e}")
 
 
+def action_dashboard(app: InventoryManager) -> None:
+    data = app.get_dashboard_data()
+    inv = data["inventory"]
+    sales = data["sales"]
+
+    print("\n=== TABLEAU DE BORD ===")
+    
+    print("\n[INVENTAIRE]")
+    print(f"Nombre de références : {inv['total_refs']}")
+    print(f"Total pièces en stock: {inv['total_items']}")
+    print(f"Valeur totale stock  : {inv['total_value_ht']:.2f} € (HT)")
+
+    print("\n[VENTES]")
+    print(f"Nombre de ventes     : {sales['total_sales_lines']}")
+    print(f"Total pièces vendues : {sales['items_sold']}")
+    print(f"Chiffre d'affaires   : {sales['revenue_ht']:.2f} € (HT)")
+    print(f"                     : {sales['revenue_ttc']:.2f} € (TTC)")
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description="Inventory CLI — starter kit")
     p.add_argument("--db", default="data/inventory.db", help="Chemin du fichier SQLite (.db)")
@@ -293,7 +312,7 @@ def main() -> int:
             elif choice == "6":
                 action_sell_product(app)
             elif choice == "7":
-                print("Fonctionnalité TODO : à implémenter par l'étudiant selon l'énoncé.")
+                action_dashboard(app)
             elif choice == "8":
                 print("Au revoir.")
                 return 0

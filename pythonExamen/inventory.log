@@ -1,0 +1,58 @@
+2025-12-17T13:10:09 | INFO | inventory.cli | App started with db=data/inventory.db
+2025-12-17T13:10:20 | INFO | inventory.services | Initialization requested from JSON: data/initial_stock.json
+2025-12-17T13:10:20 | ERROR | inventory.cli | Database error: Erreur SQLite: unable to open database file
+2025-12-17T13:10:33 | INFO | inventory.cli | App started with db=data/inventory.db
+2025-12-17T13:11:20 | INFO | inventory.cli | App started with db=data/inventory.db
+2025-12-17T13:11:36 | INFO | inventory.services | Initialization requested from JSON: data/initial_stock.json
+2025-12-17T13:11:36 | ERROR | inventory.cli | Database error: Erreur SQLite: unable to open database file
+2025-12-17T13:31:53 | INFO | inventory.cli | App started with db=data/inventory.db
+2025-12-17T13:32:00 | INFO | inventory.services | Initialization requested from JSON: 8
+2025-12-17T13:32:00 | WARNING | inventory.cli | Validation/import error: Fichier introuvable: 8
+2025-12-17T13:32:22 | INFO | inventory.services | Initialization requested from JSON: data/intial_stock.json
+2025-12-17T13:32:22 | WARNING | inventory.cli | Validation/import error: Fichier introuvable: data/intial_stock.json
+2025-12-17T13:32:43 | INFO | inventory.services | Initialization requested from JSON: data/initial_stock.json
+2025-12-17T13:32:43 | ERROR | inventory.cli | Database error: Erreur SQLite: unable to open database file
+2025-12-17T13:33:44 | INFO | inventory.services | Initialization requested from JSON: data/initial_stock.json
+2025-12-17T13:33:44 | ERROR | inventory.cli | Database error: Erreur SQLite: unable to open database file
+2025-12-17T13:35:02 | INFO | inventory.services | Initialization requested from JSON: data/initial_stock.json
+2025-12-17T13:35:02 | ERROR | inventory.cli | Database error: Erreur SQLite: unable to open database file
+2025-12-17T13:36:26 | INFO | inventory.cli | App started with db=data/inventory.db
+2025-12-17T13:36:30 | INFO | inventory.services | Initialization requested from JSON: data/initial_stock.json
+2025-12-17T13:36:30 | ERROR | inventory.cli | Database error: Erreur SQLite: unable to open database file
+2025-12-17T13:36:51 | INFO | inventory.services | Initialization requested from JSON: data/initial_stock.json
+2025-12-17T13:36:51 | ERROR | inventory.cli | Database error: Erreur SQLite: unable to open database file
+2025-12-17T13:37:05 | INFO | inventory.cli | App started with db=data/inventory.db
+2025-12-17T13:37:09 | INFO | inventory.services | Initialization requested from JSON: data/initial_stock.json
+2025-12-17T13:37:09 | ERROR | inventory.cli | Database error: Erreur SQLite: unable to open database file
+2025-12-17T13:38:02 | INFO | inventory.cli | App started with db=data/inventory.db
+2025-12-17T13:38:04 | INFO | inventory.services | Initialization requested from JSON: data/initial_stock.json
+2025-12-17T13:38:04 | ERROR | inventory.cli | Database error: Erreur SQLite: unable to open database file
+2025-12-17T13:38:15 | INFO | inventory.services | Initialization requested from JSON: data/initial_stock.json
+2025-12-17T13:38:15 | ERROR | inventory.cli | Database error: Erreur SQLite: unable to open database file
+2025-12-17T13:38:31 | INFO | inventory.cli | App started with db=data/inventory.db
+2025-12-17T13:38:33 | INFO | inventory.services | Initialization requested from JSON: data/initial_stock.json
+2025-12-17T13:38:33 | ERROR | inventory.cli | Database error: Erreur SQLite: unable to open database file
+2025-12-17T13:39:41 | INFO | inventory.cli | App started with db=data/inventory.db
+2025-12-17T13:39:45 | INFO | inventory.services | Initialization requested from JSON: data/initial_stock.json
+2025-12-17T13:39:45 | ERROR | inventory.cli | Database error: Erreur SQLite: unable to open database file
+2025-12-17T13:44:17 | INFO | inventory.cli | App started with db=data/inventory.db
+2025-12-17T13:44:18 | INFO | inventory.services | Initialization requested from JSON: data/initial_stock.json
+2025-12-17T13:44:18 | ERROR | inventory.cli | Database error: Erreur SQLite: unable to open database file
+2025-12-17T13:46:19 | INFO | inventory.cli | App started with db=data/inventory.db
+2025-12-17T13:46:32 | INFO | inventory.services | Initialization requested from JSON: data/initial_stock.json
+2025-12-17T13:46:32 | ERROR | inventory.cli | Database error: Erreur SQLite: unable to open database file
+2025-12-17T13:48:35 | INFO | inventory.cli | App started with db=data/inventory.db
+2025-12-17T13:48:38 | INFO | inventory.services | Initialization requested from JSON: data/initial_stock.json
+2025-12-17T13:48:38 | ERROR | inventory.cli | Database error: Erreur SQLite: unable to open database file
+2025-12-17T13:52:19 | INFO | inventory.cli | App started with db=data/inventory.db
+2025-12-17T13:52:49 | INFO | inventory.services | Initialization requested from JSON: data/initial_stock.json
+2025-12-17T13:52:49 | ERROR | inventory.cli | Database error: Erreur SQLite: unable to open database file
+2025-12-17T13:54:11 | INFO | inventory.cli | App started with db=data/inventory.db
+2025-12-17T13:54:13 | INFO | inventory.services | Initialization requested from JSON: data/initial_stock.json
+2025-12-17T13:54:13 | INFO | inventory.repository | DB reset + schema created.
+2025-12-17T13:54:13 | INFO | inventory.services | Initialization OK. 8 products inserted.
+2025-12-17T13:55:37 | INFO | inventory.cli | App started with db=data/inventory.db
+2025-12-17T14:12:16 | INFO | inventory.cli | App started with db=data/inventory.db
+2025-12-17T14:21:11 | INFO | inventory.cli | App started with db=data/inventory.db
+2025-12-17T14:27:32 | INFO | inventory.cli | App started with db=data/inventory.db
+2025-12-17T14:28:14 | INFO | inventory.cli | App started with db=data/inventory.db

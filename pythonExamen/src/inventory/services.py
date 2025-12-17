@@ -67,8 +67,22 @@ class InventoryManager:
         self.repo.create_schema_if_needed()
         return self.repo.list_products()
 
+    def add_product(self, sku: str, name: str, category: str, unit_price_ht: float,
+                    quantity: int, vat_rate: float = 0.20) -> int:
+        """Ajoute un nouveau produit."""
+        product = Product(
+            sku=sku,
+            name=name,
+            category=category,
+            unit_price_ht=unit_price_ht,
+            quantity=quantity,
+            vat_rate=vat_rate,
+            created_at=now_iso(),
+        )
+        return self.repo.insert_product(product)
+
     # TODO (étudiant) :
-    # - add_product / update_product / delete_product
+    # - update_product / delete_product
     # - sell_product (transaction atomique + calculs)
     # - dashboard (totaux)
     # - export_sales_csv

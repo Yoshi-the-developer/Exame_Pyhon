@@ -42,7 +42,7 @@ def print_menu() -> None:
     print("\n=== Gestion de stock (JSON → SQLite) ===")
     print("1) Initialiser le stock (depuis un JSON)")
     print("2) Afficher l’inventaire")
-    print("3) Ajouter un produit   (TODO)")
+    print("3) Ajouter un produit")
     print("4) Modifier un produit  (TODO)")
     print("5) Supprimer un produit (TODO)")
     print("6) Vendre un produit    (TODO)")
@@ -84,6 +84,51 @@ def action_list_inventory(app: InventoryManager) -> None:
     print("\n" + render_inventory_table(products))
 
 
+def action_add_product(app: InventoryManager) -> None:
+    print("\n[Ajout de produit]")
+    sku = _prompt("SKU (unique) : ")
+    if not sku:
+        print("Erreur : Le SKU ne peut pas être vide.")
+        return
+
+    name = _prompt("Nom : ")
+    category = _prompt("Catégorie : ")
+
+    try:
+        price_str = _prompt("Prix HT : ")
+        unit_price_ht = float(price_str)
+        if unit_price_ht < 0:
+            raise ValueError("Le prix doit être positif.")
+
+        qty_str = _prompt("Quantité initiale : ")
+        quantity = int(qty_str)
+        if quantity < 0:
+            raise ValueError("La quantité doit être positive.")
+
+        vat_str = _prompt("Taux de TVA (0.20 par défaut) : ")
+        vat_rate = float(vat_str) if vat_str else 0.20
+        if not (0 <= vat_rate <= 1):
+            raise ValueError("Le taux de TVA doit être entre 0 et 1.")
+
+    except ValueError as e:
+        print(f"Erreur de saisie : {e}")
+        return
+
+    try:
+        new_id = app.add_product(
+            sku=sku,
+            name=name,
+            category=category,
+            unit_price_ht=unit_price_ht,
+            quantity=quantity,
+            vat_rate=vat_rate,
+        )
+        print(f"Succès ! Produit ajouté avec l'ID {new_id}.")
+    except Exception as e:
+        print(f"Erreur lors de l'ajout : {e}")
+
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description="Inventory CLI — starter kit")
     p.add_argument("--db", default="data/inventory.db", help="Chemin du fichier SQLite (.db)")
@@ -110,7 +155,9 @@ def main() -> int:
                 action_initialize(app)
             elif choice == "2":
                 action_list_inventory(app)
-            elif choice in {"3", "4", "5", "6", "7"}:
+            elif choice == "3":
+                action_add_product(app)
+            elif choice in {"4", "5", "6", "7"}:
                 print("Fonctionnalité TODO : à implémenter par l'étudiant selon l'énoncé.")
             elif choice == "8":
                 print("Au revoir.")
